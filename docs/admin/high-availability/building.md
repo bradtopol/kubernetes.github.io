@@ -100,13 +100,13 @@ for `${NODE_IP}` on each machine.
 Once you copy this into all three nodes, you should have a clustered etcd set up.  You can validate on master with
 
 ```shell
-kubectl exec < pod_name > etcdctl member list
+kubectl exec <pod_name> etcdctl member list
 ```
 
 and
 
 ```shell
-kubectl exec < pod_name > etcdctl cluster-health
+kubectl exec <pod_name> etcdctl cluster-health
 ```
 
 You can also validate that this is working with `etcdctl set foo bar` on one node, and `etcdctl get foo`
@@ -209,13 +209,14 @@ continuously try to add itself to the list of endpoints while removing
 the other ones, causing a lot of extraneous updates in kube-proxy
 and other components.
 
-Starting with Kubernetes 1.9, a new reconciler implementation is available.
-It uses a *lease* that is regularly renewed by each apiserver
-replica. When a replica is down, it stops renewing its lease, and
-the other replicas notice that the lease expired and remove it
-from the list of endpoints. You can switch to the new reconciler
-by adding the flag `--endpoint-reconciler-type=lease` when starting
-your apiserver replicas.
+Starting with Kubernetes 1.9, a new alpha reconciler implementation is
+available.  It uses a *lease* that is regularly renewed by each apiserver
+replica. When a replica is down, it stops renewing its lease, and the other
+replicas notice that the lease expired and remove it from the list of
+endpoints. You can switch to the new reconciler by adding the flag
+`--endpoint-reconciler-type=lease` when starting your apiserver replicas.
+
+{% include feature-state-alpha.md %}
 
 If you want to know more, you can check the following resources:
 - [issue kubernetes/kuberenetes#22609](https://github.com/kubernetes/kubernetes/issues/22609),
